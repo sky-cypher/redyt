@@ -29,14 +29,12 @@ if [ "$(command -v dmenu)" ]; then
     selector_opts="-P"
 fi
 
-[ ! "$selector" ] && [ "$(command -v fzf)" ]  && selector="fzf"
-
-
 if [ ! "$selector" ] && [ "$(command -v rofi)" ] ; then
     selector="rofi"
     selector_opts="-dmenu -p"
 fi
 
+[ ! "$selector" ] && [ "$(command -v fzf)" ]  && selector="fzf"
 
 if [ ! "${viewer}" ]; then
     echo "Please install (n)sxiv or feh!"
@@ -107,7 +105,8 @@ while [ $# -gt 0 ]; do
 done
 
 
-if [ "$FILTER" -eq 1 ] && [ "${viewer}" = "sxiv" ] ; then
+if [ "$FILTER" -eq 1 ] && \
+    [ "${viewer}" = "sxiv" -o "${viewer}" = "nsxiv" ] ; then
     viewer_opts="-o $viewer_opts"
 fi
 # Default config directory
@@ -148,12 +147,8 @@ if [ -z "$subreddit" ]; then
 
 elif [ "$APPEND" -eq 1 ]; then
     echo "$subreddit" >> "$configfile"
-    subreddits="$(cat "$configfile")"
-    subreddits="$(echo "$subreddits" | sort -u)"
-    echo -n "" > "$configfile"
-    for sub in "$subreddits"; do
-	[ ! -z "$sub" ] && echo "$sub" >> "$configfile"
-    done
+    subreddits="$(cat "$configfile" | sort -u )"
+    echo "$subreddits" | tr ' ' '\n' > "$configfile"
     unset subreddits
 fi
 
@@ -200,10 +195,10 @@ done
 if [ ! "$VERBOSE" -eq 1 ]; then
     wait
 else
-    count=$(ps aux | rg -e curl -e redd | rg -v rg | wc -l)
+    count=$(ps aux | grep -e "$downloader" -e redd | grep -v grep | wc -l)
     printf "Downloading : $(echo "$imgs" | wc -w ) \n"
     while [ 0 -lt $count ]; do
-	count=$(ps aux | rg -e curl -e redd | rg -v rg | wc -l)
+	count=$(ps aux | grep -e "$downloader" -e redd | grep -v grep | wc -l)
 	printf "\rRemaining : $count "
     done
     printf "\rDone downloading \t \n"
