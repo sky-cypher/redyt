@@ -201,7 +201,7 @@ if [ ! "$VERBOSE" -eq 1 ]; then
     wait
 else
     count=$(ps aux | rg -e curl -e redd | rg -v rg | wc -l)
-    printf "Downloading : $count \n"
+    printf "Downloading : $(echo "$imgs" | wc -w ) \n"
     while [ 0 -lt $count ]; do
 	count=$(ps aux | rg -e curl -e redd | rg -v rg | wc -l)
 	printf "\rRemaining : $count "
