@@ -87,12 +87,13 @@ while [ 0 -lt $count ]; do
     printf "\rRemaining : $count "
     sleep 0.25
 done
-printf "\r👍 Download Finished, Enjoy! 😊\n"
+printf "\rDownload Completed\n"
 
 rm "$cachedir/tmp.json"
 
-read -p "Additional flags for nsxiv : " temp
+notify-send "Redyt" "👍 Download Finished, Enjoy! 😊"
+read -p "Additional flags for nsxiv : " ARGS
 
 # Display the images
-nsxiv -a -s f "$cachedir" $temp
+nsxiv -a -s f "$cachedir" $ARGS
 
