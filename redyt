@@ -91,6 +91,8 @@ printf "\r👍 Download Finished, Enjoy! 😊\n"
 
 rm "$cachedir/tmp.json"
 
+read -p "Additional flags for nsxiv : " temp
+
 # Display the images
-nsxiv -a -s f "$cachedir"
+nsxiv -a -s f "$cachedir" $temp
 
