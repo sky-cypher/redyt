@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Check if necessary programs are installed
-for prog in jq curl nsxiv fzf; do
+for prog in jq curl imv fzf; do
     if [ ! "$(command -v $prog)" ]; then
 	echo "Please install $prog!"
 	exit 1
@@ -92,8 +92,7 @@ printf "\rDownload Completed\n"
 rm "$cachedir/tmp.json"
 
 notify-send "Redyt" "👍 Download Finished, Enjoy! 😊"
-read -p "Additional flags for nsxiv : " ARGS
 
 # Display the images
-nsxiv -a -s f "$cachedir" $ARGS
+imv "$cachedir"
 

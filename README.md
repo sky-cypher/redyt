@@ -5,7 +5,7 @@ ported for my system and preferences
 Please note: you will need to install the following programs:
   - fzf (User Input)
   - jq (JSON parsing)
-  - nsxiv (Image Viewing)
+  - imv (Image Viewing)
   - curl (Downloader)
   - ripgrep (instead of grep)
 
