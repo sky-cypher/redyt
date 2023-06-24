@@ -24,6 +24,11 @@ if [ ! "$viewer" ] && [ "$(command -v feh)" ] ; then
     viewer_opts="-.ZdB black"
 fi
 
+if [ ! "$viewer" ] && [ "$(command -v imv)" ] ; then
+    viewer="imv"
+    viewer_opts=""
+fi
+
 if [ "$(command -v dmenu)" ]; then
     selector="dmenu"
     selector_opts="-P"
@@ -37,7 +42,7 @@ fi
 [ ! "$selector" ] && [ "$(command -v fzf)" ]  && selector="fzf"
 
 if [ ! "${viewer}" ]; then
-    echo "Please install (n)sxiv or feh!"
+    echo "Please install (n)sxiv or feh or imv!"
     exit 1
 fi
 
@@ -55,7 +60,7 @@ fi
 
 if [ "$(command -v wget)" ]; then
     downloader="wget"
-    downloader_opts=" "
+    downloader_opts="-q"
 else
     downloader="curl"
     downloader_opts="-Os"
