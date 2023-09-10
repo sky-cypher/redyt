@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Check if necessary programs are installed
-for prog in jq curl imv fzf; do
+for prog in jq imv; do
     if [ ! "$(command -v $prog)" ]; then
 	echo "Please install $prog!"
 	exit 1
@@ -31,29 +31,10 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-
-configdir="${XDG_CONFIG_HOME:-$HOME/.config}/redyt"
-configfile="$configdir/subreddit.txt"
-
-[ ! -d "$configdir" ] && mkdir -p "$configdir"
-
-defaultsub="linuxmemes"
-[ ! -f "$configfile" ] && echo $defaultsub >> "$configfile"
-
-# If no argument is passed
-[ -z "$subreddit" ] && subreddit="$(fzf -i < $configfile)"
 [ -z "$subreddit" ] && echo "no sub chosen" && exit 1
-
-if ! rg "^$subreddit\$" $configfile >/dev/null; then
-    echo "$subreddit" >> "$configfile"
-    subreddits="$(cat "$configfile" | sort -u)"
-    echo $subreddits | tr ' ' '\n' > "$configfile"
-    unset subreddits
-fi
 
 cachedir="/tmp/redyt/$subreddit"
 [ ! -d "$cachedir" ] && mkdir -p "$cachedir"
-
 
 echo "Downloading metadata."
 base_url="https://www.reddit.com/r"
@@ -73,20 +54,12 @@ if [ -z "$imgs" ]; then
 fi
 
 # Download images to $cachedir
-cd "$cachedir"
-for img in $imgs; do
-	if [ ! -e "$cachedir/${img##*/}" ]; then
-		curl -sO $img &
-	fi
-done
-
 printf "Downloading : $(echo "$imgs" | wc -w ) \n"
-count=$(ps aux | rg -e curl -e redd | rg -v rg | wc -l)
-while [ 0 -lt $count ]; do
-    count=$(ps aux | rg -e curl -e redd | rg -v rg | wc -l)
-    printf "\rRemaining : $count "
-    sleep 0.25
-done
+
+cd "$cachedir"
+echo $imgs | tr ' ' '\n' | xargs -I _ -P 5 curl -C - -sO _ &
+wait
+
 printf "\rDownload Completed\n"
 
 rm "$cachedir/tmp.json"

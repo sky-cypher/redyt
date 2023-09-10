@@ -1,9 +1,8 @@
-# redyt
+# Redyt
 forked from [Bugswriter/redyt](https://github.com/Bugswriter/redyt)
 ported for my system and preferences
 
 Please note: you will need to install the following programs:
-  - fzf (User Input)
   - jq (JSON parsing)
   - imv (Image Viewing)
   - curl (Downloader)
