@@ -64,7 +64,7 @@ printf "\rDownload Completed\n"
 
 rm "$cachedir/tmp.json"
 
-notify-send "Redyt" "👍 Download Finished, Enjoy! 😊"
+hyprctl notify 5 2000 0 " Redyt: Download Finished, Enjoy!" > /dev/null
 
 # Display the images
 imv "$cachedir"
